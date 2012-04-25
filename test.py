@@ -17,6 +17,7 @@ class World(ShowBase):
 		self.addFloater()
 		self.setupCamera()
 		self.addMouseTracker()
+		self.addCube()
 
 	def renderEnvironment(self):
 		""" puts in an underground to play on """
@@ -27,7 +28,7 @@ class World(ShowBase):
 	def addCharacter(self):
 		""" adds a model to play with in the world """
 		charStartPos = self.environ.find("**/start_point").getPos()
-		print charStartPos
+		print charStartPos # ???
 		self.char = Actor("models/ralph",
 				{"run":"models/ralph-run",
 				"walk":"models/ralph-walk"})
@@ -49,6 +50,7 @@ class World(ShowBase):
 		base.camera.setPos(self.char.getX(), self.char.getY()+1.3, 0.8)
 		base.disableMouse()
 		base.camera.lookAt(self.floater)
+
 	def mouseTrack(self, task): 
 		"""Use mouse to control orientation 
 		similar to a video game:""" 
@@ -67,6 +69,7 @@ class World(ShowBase):
 			return Task.cont 
 		except: 
 			return Task.cont 
+
 	def moveCamera(self, mouseXDelta, mouseYDelta):
 		hpr = base.camera.getHpr()
 		heading = hpr[0]
@@ -78,6 +81,15 @@ class World(ShowBase):
 	def addMouseTracker(self):
 		""" add the mousetracking task to the world """
 		taskMgr.add(self.mouseTrack, 'mouseTracker')
+
+	def addCube(self):
+		"""Add a cube in front of the characters just as a test."""
+		cubyPos = self.environ.find("**/start_point").getPos()
+		self.cuby = self.loader.loadModel("models/cube.egg")
+		self.cuby.setPos( cubyPos.getX(), cubyPos.getY() - 20, cubyPos.getZ() + 5 )
+		self.cuby.reparentTo(self.render)
+		self.cuby.setColor(256, 0, 0)
+		return None
 
 	def hideMouse(self):
 		""" hide the mouse pointer, we will add a crosshairs later. """
