@@ -1,0 +1,6 @@
+[ids]
+bedrock = 0
+air = 1
+dirt = 2
+stone = 3
+gravel = 4

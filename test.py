@@ -52,21 +52,23 @@ class World(ShowBase):
 		base.camera.lookAt(self.floater)
 
 	def mouseTrack(self, task): 
-		"""Use mouse to control orientation 
-		similar to a video game:""" 
+		"""Use mouse to control orientation similar to a video game:"""
 		try: 
-			# X is in relative coordinates ( distance from 0 ) 
-			# Y is in absolute coordinates ( -1 to 1 ) 
-			x=base.mouseWatcherNode.getMouseX() 
-			y=base.mouseWatcherNode.getMouseY() 
-			# Invert Y to invert pitch if desired 
-			# Reset cursor position to the horizontal center (x=0) 
-			#   but don't adjust the height (y value) 
-			base.win.movePointer(0, base.win.getProperties().getXSize() / 2, base.win.getProperties().getYSize()/2 ) 
-			# *** For debugging, print out results 
-			self.moveCamera(x, y)	
+			# X is in relative coordinates ( distance from 0 )
+			# Y is in absolute coordinates ( -1 to 1 )
+			x = base.mouseWatcherNode.getMouseX()
+			y = base.mouseWatcherNode.getMouseY()
+			# Invert Y to invert pitch if desired
+			# Reset cursor position to the horizontal center (x=0)
+			#   but don't adjust the height (y value)
+			base.win.movePointer(0
+				, base.win.getProperties().getXSize() / 2
+				, base.win.getProperties().getYSize() / 2
+				)
+			# *** For debugging, print out results
+			self.moveCamera(x, y)
 			print base.camera.getHeading()
-			return Task.cont 
+			return Task.cont
 		except: 
 			return Task.cont 
 
@@ -84,11 +86,15 @@ class World(ShowBase):
 
 	def addCube(self):
 		"""Add a cube in front of the characters just as a test."""
+
 		cubyPos = self.environ.find("**/start_point").getPos()
-		self.cuby = self.loader.loadModel("models/cube.egg")
+		cubyFile = Filename( "models/cube.egg" )
+
+		self.cuby = self.loader.loadModel( cubyFile )
 		self.cuby.setPos( cubyPos.getX(), cubyPos.getY() - 20, cubyPos.getZ() + 5 )
-		self.cuby.reparentTo(self.render)
 		self.cuby.setColor(256, 0, 0)
+		self.cuby.reparentTo(self.render)
+
 		return None
 
 	def hideMouse(self):

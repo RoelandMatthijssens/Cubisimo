@@ -1,0 +1,50 @@
+[air]
+name=air
+modelPath=path:models/eggs/air.egg
+texturePath=path:models/textures/air.png
+baseColor=(255, 0, 255)
+damageLimit=1
+damageAbsorption=0
+render=False
+transparent=True
+destructable=False
+
+
+[dirt]
+name=dirt
+modelPath=path:models/eggs/dirt.egg
+texturePath=path:models/textures/dirt.png
+baseColor=(255, 0, 0)
+damageLimit = 10
+damageAbsorption = 1
+drops=
+
+
+[stone]
+name=stone
+modelPath=path:models/eggs/stone.egg
+texturePath=path:models/textures/stone.png
+baseColor=(0, 255, 0)
+damageLimit = 10
+damageAbsorption = 3
+drops=
+
+
+[gravel]
+name=gravel
+modelPath=path:models/eggs/gravel.egg
+texturePath=path:models/textures/gravel.png
+baseColor=(255, 0, 0)
+damageLimit = 10
+damageAbsorption = 1
+drops=
+
+
+[bedrock]
+name=bedrock
+modelPath=path:models/eggs/bedrock.egg
+texturePath=path:models/textures/bedrock.png
+baseColor=(0, 0, 0)
+damageLimit = 100000
+damageAbsorption = 100000
+drops=

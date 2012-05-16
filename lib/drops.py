@@ -1,0 +1,3 @@
+""" """
+
+class Drops( object ): pass
