@@ -10,10 +10,10 @@ class ChunkGenerator( object ):
 		from blockTypeFactory import BlockTypeFactory
 		from encoder import Encoder
 
-		if not type( playerFactory ) == PlayerFactory: raise TypeError( playerFactory )
-		if not type( blockTypeFactory ) == BlockTypeFactory: raise TypeError( blockTypeFactory )
-		if not type( encoder ) == Encoder: raise TypeError( encoder )
-		if not type( chunkSize ) == int: raise TypeError( chunkSize )
+		if not isinstance( playerFactory, PlayerFactory ): raise TypeError( playerFactory )
+		if not isinstance( blockTypeFactory, BlockTypeFactory ): raise TypeError( blockTypeFactory )
+		if not isinstance( encoder, Encoder ): raise TypeError( encoder )
+		if not isinstance( chunkSize, int ): raise TypeError( chunkSize )
 
 		super( ChunkGenerator, self ).__init__()
 

@@ -1,10 +1,11 @@
 """ """
 
-from chunkGenerator import ChunkGenerator
-from encoder import Encoder
-from blockTypeFactory import BlockTypeFactory
-from playerFactory import PlayerFactory
-from configMock import ConfigMock
+from lib.chunkGenerator import ChunkGenerator
+from lib.encoder import Encoder
+from lib.blockTypeFactory import BlockTypeFactory
+from lib.playerFactory import PlayerFactory
+
+from mocks.config import ConfigMock
 
 from unittest import TestCase, TestSuite, TextTestRunner
 

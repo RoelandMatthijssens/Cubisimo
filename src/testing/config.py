@@ -1,8 +1,10 @@
 """ """
 
-from fileObjectMock import FileObjectMock
+from lib.config import Config
+from mocks.fileObject import FileObjectMock
+
 from panda3d.core import Filename
-from config import Config
+
 from unittest import TestCase, TestSuite, TextTestRunner, main
 
 class ConfigSetup( TestCase ):
@@ -31,12 +33,12 @@ class ConfigSetup( TestCase ):
 		self.fileObj = FileObjectMock( '\n'.join(self.lines) )
 		return None
 	
-	def initializing(self):
+	def it_should_initializing(self):
 		"""It should initialize without errors."""
 		self.assertIsInstance( Config( self.fileObj ), Config, 'Initialization failed.' )
 		return None
 
-	def fileParsing(self):
+	def it_should_parse_its_file(self):
 		"""It should not crash when parsing a file."""
 		self.c = Config( self.fileObj )
 		self.assertIsNone( self.c.process(), 'Parsing of the file failed.')
@@ -54,14 +56,14 @@ class BasicConfigTest( ConfigSetup ):
 		self.c.process()
 		return None
 
-	def sections(self):
+	def it_should_retrieve_sections(self):
 		"""It should have the sections described by the config file."""
 		# s = " : ".join( self.c.keys() )
 		# self.assertEqual( s, '' )
 		self.assertTrue( "balthazar" in self.c.keys(), "Sections are missing." )
 		self.assertTrue( "whatdoyouknow" in self.c.keys(), "Sections are missing." )
 
-	def valuesInSections(self):
+	def it_should_have_values_in_sections(self):
 		"""It should have the values described in the config file for each sections."""
 		section = self.c[ 'balthazar' ]
 		self.assertIn( 'firstval', section, 'Section does not have the right values.' )
@@ -73,25 +75,25 @@ class BasicConfigTest( ConfigSetup ):
 class ConfigParsingTest( BasicConfigTest ):
 	""" """
 
-	def parsingIntegers(self):
+	def it_should_detect_integers(self):
 		"""It should convert integers in the config file to actual integer objects.""" 
 		section = self.c[ 'balthazar' ]
 		self.assertEqual( section[ 'firstval' ], 2, 'Config does not parse integers.' )
 		return None
 
-	def parsingFloats(self):
+	def it_should_detect_floats(self):
 		"""It should convert decimal numbers in the config file to actual float objects.""" 
 		section = self.c[ 'whatdoyouknow' ]
 		self.assertEqual( section[ 'val' ], 4.3, 'Config does not parse floats.' )
 		return None
 
-	def parsingEmpty(self):
+	def it_should_detect_empty_strings(self):
 		"""Empty strings as values in the config file should be converted to None."""
 		section = self.c[ 'whatdoyouknow' ]
 		self.assertIsNone( section[ 'crap' ], 'Config does not convert empty values.' )
 		return None
 
-	def parsingPaths(self):
+	def it_should_detect_pathnames(self):
 		"""It should convert pathnames in the value to path objects (val=path:model/cube.egg)."""
 		section = self.c[ 'paths' ]
 		path = section[ 'base' ]
@@ -99,7 +101,7 @@ class ConfigParsingTest( BasicConfigTest ):
 		self.assertEqual( str(path), 'models/eggs/', 'Path is incorrect.' )
 		return None
 
-	def parsingTuples(self):
+	def it_should_detect_tuples(self):
 		"""It should convert tuples to python tuples."""
 		section = self.c[ 'tuples' ]
 		t = section[ 'tupleExample' ]
@@ -107,7 +109,7 @@ class ConfigParsingTest( BasicConfigTest ):
 		self.assertEqual( t, (1, 2, 3), 'Config does not convert tuples corectly.' )
 		return None
 
-	def parsingBooleans(self):
+	def it_should_detect_booleans(self):
 		"""It should convert strings like 'true' and 'False' to their boolean values."""
 		section = self.c[ 'booleans' ]
 		self.assertTrue( section[ 'isSo' ], '')
@@ -145,7 +147,7 @@ class ConfigWhitespaceTest( BasicConfigTest ):
 		self.c.process()
 		return None
 
-	def stripValueWhitespace(self):
+	def it_should_strip_whitespace_from_values(self):
 		"""The Config parser should strip meaningless whitespace in values."""
 		section = self.c['uselessWhitespace']
 		self.assertIn( 'startWithTab', section,
@@ -156,7 +158,7 @@ class ConfigWhitespaceTest( BasicConfigTest ):
 				)
 		return None
 
-	def stripKeyWhitespace(self):
+	def it_should_strip_whitespace_from_keys(self):
 		"""The Config parser should strip meaningless whitespace in keys."""
 		section = self.c['uselessWhitespace']
 		self.assertEqual( section['spaceAfterEqual'], 'AVal',
@@ -167,28 +169,14 @@ class ConfigWhitespaceTest( BasicConfigTest ):
 				)
 		return None
 
-	def keepWhitespaceInSections(self):
-		"""The Config parser should keep whitespace in sectin titles when relevant."""
-		self.assertIn( 'whitespace in title', self.c,
-				'Config did something wierd with whitespace in the section titles.'
-				)
-		return None
-
-	def stripSectionWhitespace(self):
+	def it_should_strip_whitespace_from_section_titles(self):
 		"""The Config parser should strip leading and trailing whitespaces in sectin titles."""
 		self.assertIn( 'leading and trailing whitespace', self.c,
 				'Config did not strip whitespace in section titles.' + str( self.c.keys())
 				)
 		return None
 
-	def keepWhitespaceInKeys(self):
-		"""The Config parser should keep whitespace in keys when relevant."""
-		section = self.c['whitespace in keys']
-		self.assertIn( 'some val', section, '' )
-		self.assertIn( 'other val', section, '' )
-		return None
-
-	def keepWhitespaceInValues(self):
+	def it_should_keep_whitespace_within_values(self):
 		"""The Configparser should keep whitepsace in values when relevant."""
 		section = self.c['whitespace in values']
 		s = 'A String With Whitespace'
@@ -197,39 +185,53 @@ class ConfigWhitespaceTest( BasicConfigTest ):
 		self.assertEqual( section['int'], 4 )
 		return None
 
+	def it_should_keep_whitespace_within_keys(self):
+		"""The Config parser should keep whitespace in keys when relevant."""
+		section = self.c['whitespace in keys']
+		self.assertIn( 'some val', section, '' )
+		self.assertIn( 'other val', section, '' )
+		return None
+
+	def it_should_keep_whitespace_within_section_titles(self):
+		"""The Config parser should keep whitespace in sectin titles when relevant."""
+		self.assertIn( 'whitespace in title', self.c,
+				'Config did something wierd with whitespace in the section titles.'
+				)
+		return None
+
 
 class WriteBehaviorConfigTest( BasicConfigTest ):
 	""" """
 
 	def test_writeNewVluesToFile(self):
 		"""It should update the config file if new properties are set."""
-		raise NotImplemented
+		raise NotImplementedError
 
 	def test_doNotWriteToClosedFile(self):
 		"""It should not write to the config file if it is closed."""
-		raise NotImplemented
+		raise NotImplementedError
 
 
 suite = TestSuite()
-suite.addTest( ConfigSetup( "initializing" ) )
-suite.addTest( ConfigSetup( "fileParsing" ) )
+suite.addTest( ConfigSetup( "it_should_initializing" ) )
+suite.addTest( ConfigSetup( "it_should_parse_its_file" ) )
 
-suite.addTest( BasicConfigTest( "sections" ) )
-suite.addTest( BasicConfigTest( "valuesInSections" ) )
+suite.addTest( BasicConfigTest( "it_should_retrieve_sections" ) )
+suite.addTest( BasicConfigTest( "it_should_have_values_in_sections" ) )
 
-suite.addTest( ConfigParsingTest( "parsingIntegers" ) )
-suite.addTest( ConfigParsingTest( "parsingFloats" ) )
-suite.addTest( ConfigParsingTest( "parsingEmpty" ) )
-suite.addTest( ConfigParsingTest( "parsingPaths" ) )
-suite.addTest( ConfigParsingTest( "parsingTuples" ) )
-suite.addTest( ConfigParsingTest( "parsingBooleans" ) )
+suite.addTest( ConfigParsingTest( "it_should_detect_integers" ) )
+suite.addTest( ConfigParsingTest( "it_should_detect_floats" ) )
+suite.addTest( ConfigParsingTest( "it_should_detect_empty_strings" ) )
+suite.addTest( ConfigParsingTest( "it_should_detect_pathnames" ) )
+suite.addTest( ConfigParsingTest( "it_should_detect_tuples" ) )
+suite.addTest( ConfigParsingTest( "it_should_detect_booleans" ) )
 
-suite.addTest( ConfigWhitespaceTest( "stripValueWhitespace" ) )
-suite.addTest( ConfigWhitespaceTest( "stripKeyWhitespace" ) )
-suite.addTest( ConfigWhitespaceTest( "keepWhitespaceInSections" ) )
-suite.addTest( ConfigWhitespaceTest( "stripSectionWhitespace" ) )
-suite.addTest( ConfigWhitespaceTest( "keepWhitespaceInKeys" ) )
-suite.addTest( ConfigWhitespaceTest( "keepWhitespaceInValues" ) )
+suite.addTest( ConfigWhitespaceTest( "it_should_strip_whitespace_from_values" ) )
+suite.addTest( ConfigWhitespaceTest( "it_should_strip_whitespace_from_keys" ) )
+suite.addTest( ConfigWhitespaceTest( "it_should_strip_whitespace_from_section_titles" ) )
+suite.addTest( ConfigWhitespaceTest( "it_should_keep_whitespace_within_values" ) )
+suite.addTest( ConfigWhitespaceTest( "it_should_keep_whitespace_within_keys" ) )
+suite.addTest( ConfigWhitespaceTest( "it_should_keep_whitespace_within_section_titles" ) )
 
 if __name__ == '__main__':
 	TextTestRunner(verbosity=2).run( suite )

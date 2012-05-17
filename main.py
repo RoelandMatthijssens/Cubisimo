@@ -1,5 +1,8 @@
 """ """
 
+import sys
+sys.path.append( 'src/' )
+
 from panda3d.core import Filename
 from pandac.PandaModules import Vec3, Loader
 

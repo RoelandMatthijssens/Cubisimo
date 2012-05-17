@@ -12,8 +12,8 @@ class Encoder( object ):
 		from playerFactory import PlayerFactory
 		from blockTypeFactory import BlockTypeFactory
 
-		if not type( playerFactory ) == PlayerFactory: raise TypeError( playerFactory )
-		if not type( blockTypeFactory ) == BlockTypeFactory: raise TypeError( blockTypeFactory )
+		if not isinstance( playerFactory, PlayerFactory ): raise TypeError( playerFactory )
+		if not isinstance( blockTypeFactory, BlockTypeFactory ): raise TypeError( blockTypeFactory )
 
 		super( Encoder, self ).__init__()
 		self.playerFactory = playerFactory

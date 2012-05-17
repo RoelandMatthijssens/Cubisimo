@@ -1,8 +1,10 @@
 """ """
 
-from fileObjectMock import FileObjectMock
+from lib.defaultConfig import DefaultConfig
+from mocks.fileObject import FileObjectMock
+
 from panda3d.core import Filename
-from defaultConfig import DefaultConfig
+
 from unittest import TestCase, TestSuite, TextTestRunner, main
 
 class DefaultConfigSetup( TestCase ):

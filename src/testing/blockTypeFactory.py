@@ -1,9 +1,10 @@
 """ """
 
-from fileObjectMock import FileObjectMock
-from config import Config
-from blockTypeFactory import BlockTypeFactory
-from blockType import BlockType
+from lib.config import Config
+from lib.blockTypeFactory import BlockTypeFactory
+from lib.blockType import BlockType
+from mocks.fileObject import FileObjectMock
+
 from unittest import TestCase, TestSuite, TextTestRunner, main
 
 

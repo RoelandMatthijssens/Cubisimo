@@ -45,8 +45,6 @@ class Block( object ):
 		self.cube.setColor( * self.baseColor )
 		self.cube.reparentTo( render )
 
-		print( 'loaded cube' )
-
 		return self
 
 	def destroy(self):

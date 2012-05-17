@@ -2,6 +2,7 @@
 
 from pandac.PandaModules import Vec3
 from block import Block
+from fileObjectInterface import FileObjectIF
 import struct
 
 class Chunk( object ):
@@ -12,14 +13,13 @@ class Chunk( object ):
 
 		from chunkGenerator import ChunkGenerator
 		from encoder import Encoder
-		from fileObject import FileObject
 		from panda3d.core import Filename
 
-		if not type( generator ) == ChunkGenerator: raise TypeError( generator )
-		if not type( encoder ) == Encoder: raise TypeError( encoder )
-		if not type( fileObj ) == FileObject: raise TypeError( fileObj )
-		if not type( position ) == Vec3: raise TypeError( position )
-		if not type( chunkSize ) == int: raise TypeError( chunkSize )
+		if not isinstance( generator, ChunkGenerator ): raise TypeError( generator )
+		if not isinstance( encoder, Encoder ): raise TypeError( encoder )
+		if not isinstance( fileObj, FileObjectIF ): raise TypeError( fileObj )
+		if not isinstance( position, Vec3 ): raise TypeError( position )
+		if not isinstance( chunkSize, int ): raise TypeError( chunkSize )
 
 		super( Chunk, self ).__init__()
 		self.encoder = encoder
@@ -85,7 +85,6 @@ class Chunk( object ):
 
 		while True:
 			count += 1
-			print( count, pos )
 			part = self.fileObj.read( self.encoder.size() )
 			block = self.encoder.decodeBlock( part, pos )
 

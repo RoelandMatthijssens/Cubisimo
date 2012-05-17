@@ -1,8 +1,11 @@
 """ """
 
 import os
-from fileObject import FileObject
+
+from lib.fileObject import FileObject
+
 from panda3d.core import Filename
+
 from unittest import TestCase, TestSuite, TextTestRunner, main
 
 class FileObjectSetup( TestCase ):

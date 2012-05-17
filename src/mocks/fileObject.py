@@ -1,12 +1,13 @@
 """ """
 
 from cStringIO import StringIO
-from baseFileObject import BaseFileObject
+
+from lib.baseFileObject import BaseFileObject
 
 class FileObjectMock( BaseFileObject ):
 	""" """
 
-	def __init__(self, string):
+	def __init__(self, string = ''):
 		""" """
 		super(FileObjectMock, self).__init__()
 		self.fp = StringIO( string )

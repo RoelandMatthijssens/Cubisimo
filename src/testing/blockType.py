@@ -1,7 +1,10 @@
-from drops import Drops
+""" """
+
+from lib.drops import Drops
+from lib.blockType import BlockType
+
 from panda3d.core import Filename
 
-from blockType import BlockType
 from unittest import TestCase, TestSuite, TextTestRunner, main
 
 class BlockTypeSetup( TestCase ):

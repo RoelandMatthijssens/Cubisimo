@@ -1,7 +1,8 @@
 """ """
 
-from fileObjectMock import FileObjectMock
-from config import Config
+from lib.config import Config
+
+from mocks.fileObject import FileObjectMock
 
 
 class ConfigMock( Config ):

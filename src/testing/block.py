@@ -1,25 +1,38 @@
 """ """
 
-from block import Block
-from blockType import BlockType
-from player import Player
-from drops import Drops
+from lib.block import Block
+from lib.blockType import BlockType
+from lib.player import Player
+from lib.drops import Drops
+
 from panda3d.core import Filename
 from pandac.PandaModules import Vec3
+
 from unittest import TestCase, TestSuite, TextTestRunner, main
 
 class BlockSetup( TestCase ):
 
 	def setUp(self):
 		""" """
-		self.blockType = BlockType( 1, 'dirt', Filename( 'models/eggs/dirt.egg' )
-				, Filename( 'models/texture/dirt.png' ), (256, 0, 0), 20, 0
-				, Drops()
-				)
+
+		self.blockTypeId = 1
+		self.name = 'dirt'
+		self.modelPath = Filename('models/eggs/dirt.egg')
+		self.texturePath = Filename('models/textures/dirt.png')
+		self.baseColor = (255, 0, 0)
+		self.damageLimit = 20
+		self.damageReduction = 0
+		self.drops = Drops()
+
 		self.player = Player( 1, 'Jhon' )
+
+		self.blockType = BlockType( self.blockTypeId, self.name, self.modelPath
+				, self.texturePath, self.baseColor, self.damageLimit
+				, self.damageReduction, self.drops
+				)
 		return None
 
-	def initializing(self):
+	def it_should_initializing(self):
 		""" """
 		self.assertIsInstance(
 				Block( self.blockType, Vec3( 0, 0, 0 ), 0, self.player
@@ -40,12 +53,12 @@ class BlockTest( BlockSetup ):
 				)
 		return None
 
-	def getPlayer(self):
+	def it_should_have_the_right_owner(self):
 		""" """
 		self.assertIsInstance( self.player, Player )
 		return None
 
-	def getBlockType(self):
+	def it_should_have_the_right_block_type(self):
 		""" """
 		self.assertIsInstance( self.blockType, BlockType )
 		return None
@@ -56,12 +69,11 @@ class BlockTest( BlockSetup ):
 
 suite = TestSuite()
 
-suite.addTest( BlockSetup( 'initializing' ) )
+suite.addTest( BlockSetup( 'it_should_initializing' ) )
 
-suite.addTest( BlockTest( 'getPlayer' ) )
-suite.addTest( BlockTest( 'getBlockType' ) )
+suite.addTest( BlockTest( 'it_should_have_the_right_owner' ) )
+suite.addTest( BlockTest( 'it_should_have_the_right_block_type' ) )
 
-suite.addTest( BlockSetup( 'initializing' ) )
 
 if __name__ == '__main__':
 	TextTestRunner(verbosity=2).run( suite )

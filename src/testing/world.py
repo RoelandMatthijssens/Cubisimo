@@ -1,14 +1,15 @@
 """ """
 
+from cStringIO import StringIO
+
+from lib.config import Config
+from lib.world import World
+
 from panda3d.core import Filename
 from pandac.PandaModules import Point3
 
-from cStringIO import StringIO
-
 from unittest import TestCase, TestSuite, TextTestRunner
 
-from world import World
-from config import Config
 
 class WorldSetup( TestCase ):
 	""" """
@@ -81,7 +82,9 @@ class BasicWorldTest( WorldSetup ):
 
 		return None
 
+
 suite = TestSuite()
+
 suite.addTest( WorldSetup( 'initializing' ) )
 suite.addTest( BasicWorldTest( 'toChunkPos' ) )
 

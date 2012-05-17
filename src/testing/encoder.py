@@ -1,11 +1,13 @@
 """ """
 
-from encoder import Encoder
-from block import Block
-from blockTypeFactory import BlockTypeFactory
-from playerFactory import PlayerFactory
-from configMock import ConfigMock
+from lib.encoder import Encoder
+from lib.block import Block
+from lib.blockTypeFactory import BlockTypeFactory
+from lib.playerFactory import PlayerFactory
+from mocks.config import ConfigMock
+
 from pandac.PandaModules import Vec3
+
 from unittest import TestCase, TestSuite, TextTestRunner
 
 class EncoderSetup( TestCase ):
