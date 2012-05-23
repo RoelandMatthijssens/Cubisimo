@@ -109,5 +109,23 @@ class Chunk( object ):
 		self.chunkModel = None
 		return None
 
+	def place(self, block, position):
+		string = self.encoder.encodeBlock( block )
+		blockIdx = self.getIdx( position )
+		self.fileObj.open()
+		self.fileObj.seek( blockIdx )
+		self.fileObj.write( string )
+		self.fileObj.close()
+		return None
+
+	def getIdx(self, position):
+		''' '''
+		i = position.getZ()
+		i += position.getY() * self.chunkSize
+		i += position.getX() * self.chunkSize ** 2
+		i = i * self.encoder.size()
+		if i > 0: i -= 1
+		return int( i )
+
 	def __iter__(self): return self.blocks
 
