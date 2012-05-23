@@ -59,7 +59,7 @@ class Encoder( object ):
 		blockType = self.blockTypeFactory.fromId( blockTypeId )
 		player = self.playerFactory.fromId( playerId )
 
-		return Block( blockType, position, damage, player, seed, blockType.baseColor )
+		return Block( blockType, position, player, damage, seed, blockType.baseColor )
 
 	def intToByteList(self, integer ):
 		""" """

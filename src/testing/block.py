@@ -1,66 +1,46 @@
 """ """
 
 from lib.block import Block
-from lib.blockType import BlockType
 from lib.player import Player
-from lib.drops import Drops
-
-from panda3d.core import Filename
-from pandac.PandaModules import Vec3
+from lib.blockType import BlockType
+from factories.player import PlayerSetup
+from factories.block import BlockSetup
+from factories.blockType import BlockTypeSetup
 
 from unittest import TestCase, TestSuite, TextTestRunner, main
 
-class BlockSetup( TestCase ):
-
-	def setUp(self):
-		""" """
-
-		self.blockTypeId = 1
-		self.name = 'dirt'
-		self.modelPath = Filename('models/eggs/dirt.egg')
-		self.texturePath = Filename('models/textures/dirt.png')
-		self.baseColor = (255, 0, 0)
-		self.damageLimit = 20
-		self.damageReduction = 0
-		self.drops = Drops()
-
-		self.player = Player( 1, 'Jhon' )
-
-		self.blockType = BlockType( self.blockTypeId, self.name, self.modelPath
-				, self.texturePath, self.baseColor, self.damageLimit
-				, self.damageReduction, self.drops
-				)
-		return None
+class Initializing( TestCase ):
 
 	def it_should_initializing(self):
 		""" """
+		blockType, position, owner, damage, seed, baseColor = BlockSetup.prepare()
+
 		self.assertIsInstance(
-				Block( self.blockType, Vec3( 0, 0, 0 ), 0, self.player
-						, 110, self.blockType.baseColor
-						)
+				Block( blockType, position, owner, damage, seed, baseColor )
 				, Block
 				)
 		return None
 
-class BlockTest( BlockSetup ):
+class BlockTest( TestCase ):
 	""" """
 
 	def setUp(self):
 		""" """
-		BlockSetup.setUp( self )
-		self.block = Block( self.blockType, Vec3( 0, 0, 0 ) , 0
-				, self.player, 110, self.blockType.baseColor
-				)
+		self.player = PlayerSetup.create()
+		self.blockType = BlockTypeSetup.create()
+		self.block = BlockSetup.create( owner = self.player, blockType = self.blockType )
 		return None
 
 	def it_should_have_the_right_owner(self):
 		""" """
-		self.assertIsInstance( self.player, Player )
+		self.assertIsInstance( self.block.owner, Player )
+		self.assertEqual( self.block.owner, self.player )
 		return None
 
 	def it_should_have_the_right_block_type(self):
 		""" """
-		self.assertIsInstance( self.blockType, BlockType )
+		self.assertIsInstance( self.block.blockType, BlockType )
+		self.assertEqual( self.block.blockType, self.blockType )
 		return None
 
 	def damage(self): pass
@@ -69,7 +49,7 @@ class BlockTest( BlockSetup ):
 
 suite = TestSuite()
 
-suite.addTest( BlockSetup( 'it_should_initializing' ) )
+suite.addTest( Initializing( 'it_should_initializing' ) )
 
 suite.addTest( BlockTest( 'it_should_have_the_right_owner' ) )
 suite.addTest( BlockTest( 'it_should_have_the_right_block_type' ) )

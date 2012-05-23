@@ -1,8 +1,11 @@
 """ """
 
+from pandac.PandaModules import NodePath
+
+
 class Block( object ):
 
-	def __init__(self, blockType, position, damage, owner, seed, baseColor ):
+	def __init__(self, blockType, position, owner, damage, seed, baseColor ):
 		""" """
 
 		from blockType import BlockType
@@ -35,19 +38,26 @@ class Block( object ):
 		if self.damage > self.blockType.durability: return self.destroy()
 		else: return self.damage
 
-	def create(self, loader, environment):
+	def create(self, environment ): return self.load( environment )
+
+	def load(self, environment):
 		"""Add the block to the world. Do the actual construction of the model when
 		necessary and add it to the environment (should actually be a chunk)."""
 
-		cubeFile = self.blockType.modelPath
-		self.cube = loader.loadModel( cubeFile )
+		self.cube = NodePath('cube')
+		model = self.blockType.getModel()
+		model.instanceTo( self.cube )
 		self.cube.setPos( self.position )
-		self.cube.setColor( * self.baseColor )
-		self.cube.reparentTo( render )
+		self.cube.reparentTo( environment )
 
 		return self
+
+	def unload( self ):
+		''' '''
+		self.cube.detachNode()
+		return None
 
 	def destroy(self):
 		"""See what items should be dropped, remove the block from the world, and handle
 		everything else that should happens when a block breaks."""
-		raise NotImplemented
+		raise NotImplementedError

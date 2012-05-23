@@ -1,67 +1,74 @@
 """ """
 
 from lib.chunkGenerator import ChunkGenerator
-from lib.encoder import Encoder
-from lib.blockTypeFactory import BlockTypeFactory
-from lib.playerFactory import PlayerFactory
+from mocks.fileObject import FileObjectMock
+from factories.playerFactory import PlayerFactorySetup
+from factories.blockTypeFactory import BlockTypeFactorySetup
+from factories.encoder import EncoderSetup
+from factories.chunkGenerator import ChunkGeneratorSetup
 
-from mocks.config import ConfigMock
+from pandac.PandaModules import Vec3
 
 from unittest import TestCase, TestSuite, TextTestRunner
 
-class ChunkGeneratorSetup( TestCase ):
-	""" """
 
-	def setUp(self):
-		""" """
-		self.blockTypeConfig = ConfigMock( "#comment"
-				, '[dirt]'
-				, 'name=dirt'
-				, 'modelPath=path:models/eggs/dirt.egg'
-				, 'texturePath=path:models/textures/dirt.png'
-				, 'baseColor=(0, 0, 256)'
-				, 'damageLimit=50'
-				, 'damageAbsorption=0'
-				)
-		self.blockTypeIdConfig = ConfigMock( "[ids]", "dirt=1" )
-		self.playerConfig = ConfigMock( "[Jhon]", "hp=100" )
-		self.playerIdConfig = ConfigMock( "[ids]", "Jhon=1" )
+class Initialize( TestCase ):
+	''' '''
 
-		self.btf = BlockTypeFactory(self.blockTypeConfig, self.blockTypeIdConfig)
-		self.playerFactory = PlayerFactory( self.playerConfig, self.playerIdConfig )
-		self.btf.process()
-		self.playerFactory.process()
+	def it_should_initialize( self ):
+		''' '''
+		encoder, playerFactory, blockTypeFactory, chunkSize = ChunkGeneratorSetup.prepare()
 
-		self.encoder = Encoder( self.playerFactory, self.btf )
-		return None
-
-	def initializing(self):
-		""" """
 		self.assertIsInstance(
-				ChunkGenerator( self.encoder, self.playerFactory, self.btf, 32 )
+				ChunkGenerator( encoder, playerFactory, blockTypeFactory, chunkSize )
 				, ChunkGenerator
-		)
+				)
 		return None
 
 
-class ChunkGeneration( ChunkGeneratorSetup ):
-	""" """
+class ChunkGeneratorTest( TestCase ):
+	''' '''
 
-	def setUp(self):
-		""" """
-		ChunkGeneratorSetup.setUp( self )
-		self.generator = ChunkGenerator( self.encoder, self.playerFactory, self.btf, 32 )
+	def setUp( self ):
+		''' '''
+		self.fileObj = FileObjectMock()
+		self.position = Vec3( 0, 0, 0 )
+
+		self.encoder = EncoderSetup.create()
+		self.playerFactory = PlayerFactorySetup.create()
+		self.blockTypeFactory = BlockTypeFactorySetup.create()
+		self.chunkSize = 16
+
+		self.generator = ChunkGeneratorSetup.create( encoder = self.encoder
+				, playerFactory = self.playerFactory
+				, blockTypeFactory = self.blockTypeFactory
+				, chunkSize = self.chunkSize
+				)
 		return None
 
-	def generation(self):
-		""" """
-		pass
+	def it_should_generate_properly( self ):
+		''' '''
+		self.assertIsNone( self.generator.generate(self.fileObj, self.position) )
+
+		world = self.playerFactory.fromName( '__WORLD__' )
+		air = self.blockTypeFactory.fromName( 'air' ).newBlock( world )
+		string = self.encoder.encodeBlock( air ) * ( self.chunkSize ** 3 )
+
+		self.fileObj.open()
+		self.fileObj.seek( 0 )
+
+		self.assertEqual( self.fileObj.read(), string )
+
+		self.fileObj.close()
+		return None
+
 
 suite = TestSuite()
 
-suite.addTest( ChunkGeneratorSetup( "initializing" ) )
+suite.addTest( Initialize( 'it_should_initialize' ) )
 
-suite.addTest( ChunkGeneration( "generation" ) )
+suite.addTest( ChunkGeneratorTest( 'it_should_generate_properly' ) )
+
 
 if __name__ == '__main__':
 	TextTestRunner(verbosity=2).run( suite )

@@ -12,12 +12,12 @@ class BlockType( object ):
 			, damageLimit, damageAbsorption, drops):
 		""" """
 
-		if not type( identifier ) == int: raise Exception
-		if not type( modelPath ) == Filename: raise Exception
-		if not type( texturePath ) == Filename: raise Exception
-		if not type( name ) == str: raise Exception
-		if not type( damageLimit ) == int: raise Exception
-		if not type( damageAbsorption) == int: raise Exception
+		if not isinstance( identifier, int ): raise Exception
+		if not isinstance( modelPath, Filename ): raise Exception
+		if not isinstance( texturePath, Filename ): raise Exception
+		if not isinstance( name, str ): raise Exception
+		if not isinstance( damageLimit, int ): raise Exception
+		if not isinstance( damageAbsorption, int ): raise Exception
 
 		super( BlockType, self ).__init__()
 
@@ -32,6 +32,15 @@ class BlockType( object ):
 		self.damageAbsorption = damageAbsorption
 
 		self.drops = drops
+		return None
+
+	def getModel(self): return self.cube
+
+	def loadModel(self, loader):
+		""" """
+		self.cube = loader.loadModel( self.modelPath )
+		self.cube.setPos( 0, 0, 0 )
+		self.cube.setColor( * self.baseColor )
 		return None
 
 	def newSeed(self): return 0

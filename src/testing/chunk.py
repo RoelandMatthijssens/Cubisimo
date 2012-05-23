@@ -1,48 +1,62 @@
 """ """
 
-from lib.encoder import Encoder
-from lib.chunkGenerator import ChunkGenerator
 from lib.chunk import Chunk
 from mocks.fileObject import FileObjectMock
-from mocks.playerFactory import PlayerFactoryMock
-from mocks.blockTypeFactory import BlockTypeFactoryMock
+from factories.playerFactory import PlayerFactorySetup
+from factories.blockTypeFactory import BlockTypeFactorySetup
+from factories.chunk import ChunkSetup
 
 from pandac.PandaModules import Vec3
+from pandac.PandaModules import NodePath
 
 from unittest import TestCase, TestSuite, TextTestRunner, main
 
-class ChunkSetup( TestCase ):
-	""" """
+class Initialize( TestCase ):
+	''' '''
 
-	def setUp(self):
+	def it_should_initialise(self):
 		''' '''
-
-		self.playerFactory = PlayerFactoryMock()
-		self.blockTypeFactory = BlockTypeFactoryMock()
-		self.chunkSize = 2
-
-		self.encoder = Encoder( self.playerFactory, self.blockTypeFactory )
-		self.generator = ChunkGenerator( self.encoder, self.playerFactory
-				, self.blockTypeFactory, self.chunkSize
-				)
-		self.fileObj = FileObjectMock()
-		self.position = Vec3( 0, 0, 0 )
-		return None
-
-	def it_should_initializing(self):
-		''' '''
+		encoder, generator, fileObj, chunkSize, position = ChunkSetup.prepare()
 		self.assertIsInstance(
-				Chunk( self.encoder, self.generator, self.fileObj,
-						self.chunkSize, self.position
-						)
+				Chunk( encoder, generator, fileObj, chunkSize, position)
 				, Chunk
 				)
 		return None
 
 
+class ChunkGenerationTest( TestCase ):
+	''' '''
+
+	def setUp(self):
+		''' '''
+		self.encoder, gen, self.fileObj, self.chunkSize, pos = ChunkSetup.prepare()
+		self.chunk = ChunkSetup.create( fileObj = self.fileObj, encoder = self.encoder )
+		return None
+
+	def it_should_create_a_chunk(self):
+		''' '''
+		self.fileObj.setExists( False )
+		node = NodePath()
+
+		self.assertIsNone( self.chunk.load(node) )
+
+		self.fileObj.open()
+		self.fileObj.seek(0)
+		blockLength = self.encoder.size()
+		nrOfBlocks = self.chunkSize ** 3
+
+		# check if something is wrinten to the file, and that it make some sence.
+		self.assertEqual( len(self.fileObj.read()), blockLength * nrOfBlocks )
+
+		self.fileObj.close() 
+		return None
+
+
 suite = TestSuite()
 
-suite.addTest( ChunkSetup( 'it_should_initializing' ) )
+suite.addTest( Initialize( 'it_should_initialise' ) )
+
+suite.addTest( ChunkGenerationTest( 'it_should_create_a_chunk' ) )
 
 
 if __name__ == '__main__':

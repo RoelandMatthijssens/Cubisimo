@@ -1,115 +1,79 @@
 """ """
 
-from lib.config import Config
+import os
+
 from lib.blockTypeFactory import BlockTypeFactory
 from lib.blockType import BlockType
-from mocks.fileObject import FileObjectMock
+from factories.blockTypeFactory import BlockTypeFactorySetup
 
 from unittest import TestCase, TestSuite, TextTestRunner, main
 
 
-class BlockTypeFactorySetup( TestCase ):
-	""" """
+class Initializing( TestCase ):
+	''' '''
 
-	def setUp(self):
-		""" """
-		self.blockText = [ '# some test config file.'
-				, '[dirt]'
-				, 'name=dirt'
-				, 'modelPath=path:models/eggs/dirt.egg'
-				, 'texturePath=path:models/textures/dirt.png'
-				, 'baseColor=(0, 0, 256)'
-				, 'damageLimit=50'
-				, 'damageAbsorption=0'
-				, '[stone]'
-				, 'name=stone'
-				, 'modelPath=path:models/eggs/stone.egg'
-				, 'texturePath=path:models/textures/stone.png'
-				, 'baseColor=(0, 256, 0)'
-				, 'damageLimit=120'
-				, 'damageAbsorption=5'
-				]
-		self.blockIdText = [ '# the id\'s of the blocks above.'
-				, '[ids]'
-				, '# air=0'
-				, 'dirt = 1'
-				, 'stone=2'
-				]
+	def it_should_initialize(self):
+		''' '''
+		objectsConfig, idsConfig, loader = BlockTypeFactorySetup.prepare()
 
-		self.blockFile = FileObjectMock( '\n'.join( self.blockText ) )
-		self.idFile = FileObjectMock( '\n'.join( self.blockIdText ) )
-		self.blockConfig = Config( self.blockFile )
-		self.idConfig = Config( self.idFile )
-		self.blockConfig.process()
-		self.idConfig.process()
-		return None
-
-	def initialize(self):
-		""" """
-		self.assertIsInstance( BlockTypeFactory( self.blockConfig, self.idConfig )
+		self.assertIsInstance(
+				BlockTypeFactory(objectsConfig, idsConfig, loader)
 				, BlockTypeFactory
-				, 'BlockTypeFactory did not initialize properly.' )
+				)
+
 		return None
 
-	def process(self):
-		""" """
-		self.btk = BlockTypeFactory( self.blockConfig, self.idConfig )
-		self.assertIsNone( self.btk.process(), '' )
+	def it_should_process_its_config_files(self):
+		''' '''
+		blockTypeFactory = BlockTypeFactorySetup.create()
+		self.assertIsNone( blockTypeFactory.process() )
 		return None
 
 
-class BlockTypeFactoryTest( BlockTypeFactorySetup ):
-	""" """
+class BasicTests( TestCase ):
+	''' '''
 
 	def setUp( self ):
-		""" """
-		BlockTypeFactorySetup.setUp(self)
-		self.btk = BlockTypeFactory( self.blockConfig, self.idConfig )
-		self.btk.process()
+		''' '''
+		self.blockTypeFactory = BlockTypeFactorySetup.create()
 		return None
 
-	def idsize(self):
-		""" """
-		self.assertEqual( self.btk.idSize(), 1)
+	def it_should_figure_out_the_right_id_size(self):
+		''' '''
+		self.assertEqual( self.blockTypeFactory.idSize(), 1 )
 		return None
 
 
-class BlockTypeFactoryLookUps( BlockTypeFactoryTest ):
-	""" """
+class LookUps( BasicTests ):
+	''' '''
 
-	def lookUpByName(self):
-		""" """
-		self.assertIn( 'dirt', self.btk.objects.keys()
-				, 'BlockTypeFactory did not properly remember blockTypes.'
-				)
-		self.assertIsInstance( self.btk.fromName('dirt'), BlockType
-				, 'BlockTypeFactory did not properly construct blockTypes.'
-				)
+	def it_should_look_up_blocks_by_name(self):
+		''' '''
+		self.assertIn( 'dirt', self.blockTypeFactory.objects.keys() )
+		dirt = self.blockTypeFactory.fromName( 'dirt' )
+		self.assertIsInstance( dirt, BlockType )
+		self.assertEqual( dirt.name, 'dirt' )
 		return None
 
-	def lookUpById(self):
-		self.assertIn( 1, self.btk.ids
-				, 'BlockTypeFactory did not properly remember typeIds.'
-				)
-		self.assertIsInstance( self.btk.fromId( 1 ), BlockType
-				, 'BlockTypeFactory did not bind id\'s to blockTypes.'
-				)
-		self.assertEqual( self.btk.fromId( 1 ), self.btk.fromName('dirt')
-				, 'lookup by id and by name did not match.'
-				)
+	def it_should_look_up_blocks_by_id(self):
+		''' '''
+		self.assertIn( 1, self.blockTypeFactory.ids )
+		dirt = self.blockTypeFactory.fromId( 1 )
+		self.assertIsInstance( dirt, BlockType)
+		self.assertEqual( dirt.name, 'dirt' )
+		self.assertEqual( dirt, self.blockTypeFactory.fromName('dirt') )
 		return None
-
 
 
 suite = TestSuite()
 
-suite.addTest( BlockTypeFactorySetup( 'initialize' ) )
-suite.addTest( BlockTypeFactorySetup( 'process' ) )
+suite.addTest( Initializing( 'it_should_initialize' ) )
+suite.addTest( Initializing( 'it_should_process_its_config_files' ) )
 
-suite.addTest( BlockTypeFactoryTest( 'idsize' ) )
+suite.addTest( BasicTests( 'it_should_figure_out_the_right_id_size' ) )
 
-suite.addTest( BlockTypeFactoryLookUps( 'lookUpByName' ) )
-suite.addTest( BlockTypeFactoryLookUps( 'lookUpById' ) )
+suite.addTest( LookUps( 'it_should_look_up_blocks_by_name' ) )
+suite.addTest( LookUps( 'it_should_look_up_blocks_by_id' ) )
 
 if __name__ == '__main__':
 	TextTestRunner(verbosity=2).run( suite )

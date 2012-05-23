@@ -10,6 +10,8 @@ from lib.config import Config
 from lib.world import World
 from lib.scene import Scene
 from lib.fileObject import FileObject
+from lib.playerFactory import PlayerFactory
+from lib.blockTypeFactory import BlockTypeFactory
 
 if __name__ == '__main__':
 
@@ -25,14 +27,20 @@ if __name__ == '__main__':
 	for name, fileObj in files.items(): configs[ name ] = Config( fileObj )
 	for config in configs.values(): config.process()
 
-	world = World( savePath , configs['main'], configs['blockTypes']
-			, configs['blockTypeIds'] , configs['players'], configs['playerIds']
-			)
-	world.setup()
-
 	scene = Scene()
 
+	playerFactory = PlayerFactory( configs['players'], configs['playerIds'] )
+	blockTypeFactory = BlockTypeFactory( configs['blockTypes']
+			, configs['blockTypeIds'], scene.loader
+			)
+
+	playerFactory.process()
+	blockTypeFactory.process()
+
+	world = World( configs['main'], playerFactory, blockTypeFactory )
+	world.setup()
+
 	# assume we are at position (0, 0, 0)
-	for chunk in world.getChunks( Vec3(0, 0, 0) ): chunk.load( scene )
+	for chunk in world.getChunks( Vec3(0, 0, 0) ): chunk.load( scene.render )
 
 	scene.run()

@@ -1,6 +1,7 @@
 """ """
 
 from pandac.PandaModules import Vec3
+from pandac.PandaModules import NodePath
 from block import Block
 from fileObjectInterface import FileObjectIF
 import struct
@@ -73,22 +74,19 @@ class Chunk( object ):
 	def load(self, environment):
 		"""Construct all the blocks in this chunk, and add it to the environment."""
 
-		print( 'started loading' )
-		self.chunkModel = environment.render.attachNewNode("chunk")
+		self.chunkModel = NodePath("chunk")
 		pos = Vec3(0, 0, 0)
 
 		if not self.fileObj.exists(): self.generator.generate(self.fileObj, self.position)
 
 		self.fileObj.open()
-
-		count = 0
+		self.fileObj.seek( 0 )
 
 		while True:
-			count += 1
 			part = self.fileObj.read( self.encoder.size() )
 			block = self.encoder.decodeBlock( part, pos )
 
-			block.create( environment.loader, self.chunkModel )
+			block.create( self.chunkModel )
 			self.blocks.append( block )
 
 			if pos.getX() >= self.chunkSize - 1: pos = Vec3( 0, pos.getY() + 1, pos.getZ() )
@@ -97,8 +95,7 @@ class Chunk( object ):
 			if pos.getZ() >= self.chunkSize - 1: break
 
 		self.fileObj.close()
-		self.chunkModel.reparentTo( environment.render )
-		print( 'done loading' )
+		self.chunkModel.reparentTo( environment )
 		return None
 
 	def unload(self):

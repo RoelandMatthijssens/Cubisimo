@@ -13,28 +13,18 @@ from encoder import Encoder
 class World( object ):
 	""" """
 
-	def __init__(self, savePath, settings, blockTypes, blockTypeIds, players, playerIds):
+	def __init__(self, settings, playerFactory, blockTypeFactory):
 		""" """
 		super( World, self ).__init__()
 
-		self.savePath = savePath
 		self.settings = settings
-		self.blockTypes = blockTypes
-		self.blockTypeIds = blockTypeIds
-		self.players = players
-		self.playerIds = playerIds
-
-		# Good god!
-		self.modelPath = Filename( 'models/' )
+		self.playerFactory = playerFactory
+		self.blockTypeFactory = blockTypeFactory
 
 		return None
 
 	def setup(self):
 		""" """
-		self.playerFactory = PlayerFactory( self.players, self.playerIds )
-		self.blockTypeFactory = BlockTypeFactory( self.blockTypes, self.blockTypeIds )
-		self.playerFactory.process()
-		self.blockTypeFactory.process()
 		self.encoder = Encoder( self.playerFactory, self.blockTypeFactory )
 		self.generator = ChunkGenerator( self.encoder, self.playerFactory
 				, self.blockTypeFactory, self.settings['general']['chunkSize']
