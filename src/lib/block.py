@@ -44,6 +44,7 @@ class Block( object ):
 		"""Add the block to the world. Do the actual construction of the model when
 		necessary and add it to the environment (should actually be a chunk)."""
 
+		if self.blockType.name == 'air': return None
 		self.cube = NodePath('cube')
 		model = self.blockType.getModel()
 		model.instanceTo( self.cube )

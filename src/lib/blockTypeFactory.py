@@ -1,8 +1,13 @@
 """ """
 
-from drops import Drops
-from blockType import BlockType
 from factory import Factory
+from drops import Drops
+
+from blockType import BlockType
+from baseBlock import BaseBlock
+from airBlock import AirBlock
+
+blockClasses = { 'air': AirBlock }
 
 class BlockTypeFactory( Factory ):
 	''' '''
@@ -17,11 +22,12 @@ class BlockTypeFactory( Factory ):
 		''' '''
 
 		drops = Drops()
+		blockClass = blockClasses.get( name, BaseBlock )
 
-		blockType = BlockType( identifier, name, values[ 'modelPath' ]
-				, values[ 'texturePath' ], values[ 'baseColor' ]
-				, values[ 'damageLimit' ], values[ 'damageAbsorption' ]
-				, drops
+		blockType = BlockType( identifier, blockClass, name
+				, values[ 'modelPath' ], values[ 'texturePath' ]
+				, values[ 'baseColor' ], values[ 'damageLimit' ]
+				, values[ 'damageAbsorption' ], drops
 				)
 		blockType.loadModel( self.loader )
 

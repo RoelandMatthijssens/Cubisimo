@@ -8,7 +8,7 @@ from unittest import TestSuite, TextTestRunner, main
 from testing.fileObject import suite as fileObjectSuite
 from testing.config import suite as configSuite
 from testing.defaultConfig import suite as defaultConfigSuite
-from testing.block import suite as blockSuite
+from testing.baseBlock import suite as baseBlockSuite
 from testing.blockType import suite as blockTypeSuite
 from testing.blockTypeFactory import suite as blockTypeFactorySuite
 from testing.encoder import suite as encoderSuite
@@ -19,7 +19,7 @@ suite = TestSuite()
 suite.addTest( fileObjectSuite )
 suite.addTest( configSuite )
 suite.addTest( defaultConfigSuite )
-suite.addTest( blockSuite )
+suite.addTest( baseBlockSuite )
 suite.addTest( blockTypeSuite )
 suite.addTest( blockTypeFactorySuite )
 suite.addTest( encoderSuite )

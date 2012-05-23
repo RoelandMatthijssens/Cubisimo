@@ -4,6 +4,7 @@ from factories.setup import Setup
 from factories.drops import DropsSetup
 
 from lib.blockType import BlockType
+from lib.baseBlock import BaseBlock
 
 from panda3d.core import Filename
 
@@ -18,14 +19,17 @@ class BlockTypeSetup( Setup ):
 	damageLimit = 20
 	damageReduction = 0
 	drops = DropsSetup.create()
+	blockClass = BaseBlock
 
 	@classmethod
-	def create(cls, blockTypeId=None, name=None, modelPath=None, texturePath=None
-			, baseColor=None, damageLimit=None, damageReduction=None, drops=None
+	def create(cls, blockTypeId=None, blockClass=None, name=None, modelPath=None
+			, texturePath=None, baseColor=None, damageLimit=None
+			, damageReduction=None, drops=None
 			):
 		''' '''
 
 		blockTypeId = blockTypeId or cls.blockTypeId
+		blockClass = blockClass or cls.blockClass
 		name = name or cls.name
 		modelPath = modelPath or cls.modelPath
 		texturePath = texturePath or cls.texturePath
@@ -34,12 +38,13 @@ class BlockTypeSetup( Setup ):
 		damageReduction = damageReduction or cls.damageReduction
 		drops = drops or cls.drops
 
-		return BlockType( blockTypeId, name, modelPath, texturePath, baseColor
-				, damageLimit, damageReduction, drops )
+		return BlockType( blockTypeId, blockClass, name, modelPath, texturePath
+				, baseColor , damageLimit, damageReduction, drops
+				)
 
 	@classmethod
 	def prepare(cls): 
 		''' '''
-		return ( cls.blockTypeId, cls.name, cls.modelPath, cls.texturePath, cls.baseColor
-			, cls.damageLimit, cls.damageReduction, cls.drops
-			)
+		return ( cls.blockTypeId, cls.blockClass, cls.name, cls.modelPath, cls.texturePath
+				, cls.baseColor, cls.damageLimit, cls.damageReduction, cls.drops
+				)

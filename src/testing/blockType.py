@@ -13,12 +13,12 @@ class Initializing( TestCase ):
 
 	def it_should_initialize(self):
 		'''It should initialize properly with good values.'''
-		( identifier, name, modelPath, texturePath, baseColor, damageLimit
-			, damageAbsorption, drops ) = BlockTypeSetup.prepare()
+		( identifier, blockClass, name, modelPath, texturePath, baseColor
+			, damageLimit, damageAbsorption, drops ) = BlockTypeSetup.prepare()
 
 		self.assertIsInstance(
-				BlockType(identifier, name, modelPath, texturePath, baseColor
-						, damageLimit, damageAbsorption, drops
+				BlockType(identifier, blockClass, name, modelPath, texturePath
+						, baseColor, damageLimit, damageAbsorption, drops
 						)
 				, BlockType
 				)
@@ -30,16 +30,17 @@ class BlockTypeTest( TestCase ):
 
 	def setUp(self):
 		''' '''
-		( self.identifier, self.name, self.modelPath, self.texturePath
-				, self.baseColor, self.damageLimit, self.damageAbsorption
-				, self.drops ) = BlockTypeSetup.prepare()
+		( self.identifier, self.blockClass, self.name, self.modelPath,
+				self.texturePath, self.baseColor, self.damageLimit
+				, self.damageAbsorption, self.drops ) = BlockTypeSetup.prepare()
 		return None
 
 	def it_should_only_accept_filenames_for_modelPaths(self):
 		'''It should only initialize if the modelPath is a path.'''
 		self.assertRaises(TypeError, BlockType,
-			( self.identifier, self.name, "/models/eggs/dirt.egg", self.texturePath
-			, self.baseColor, self.damageLimit, self.damageAbsorption, self.drops
+			( self.identifier, self.blockClass, self.name, "/models/eggs/dirt.egg"
+			, self.texturePath, self.baseColor, self.damageLimit, self.damageAbsorption
+			, self.drops
 			)
 		)
 		return None
@@ -47,9 +48,9 @@ class BlockTypeTest( TestCase ):
 	def it_should_only_accept_filenames_for_texturePaths(self):
 		'''It should only initialize if the texturePath is a path.'''
 		self.assertRaises(TypeError, BlockType,
-			( self.identifier, self.name, self.modelPath, "/models/textures/dirt.png"
-			, self.baseColor, self.damageLimit, self.damageAbsorption
-			, self.drops
+			( self.identifier, self.blockClass, self.name, self.modelPath
+			, "/models/textures/dirt.png" , self.baseColor, self.damageLimit
+			, self.damageAbsorption, self.drops
 			)
 		)
 		return None
@@ -65,15 +66,17 @@ class BlockTypeTest( TestCase ):
 
 		# test that strings are not accepted (when config files are parsed weirdly.
 		self.assertRaises(TypeError, BlockType,
-			( self.identifier, self.name, self.modelPath, self.texturePath
-			, self.baseColor, "4", self.damageAbsorption, self.drops
+			( self.identifier, self.blockClass, self.name, self.modelPath
+			, self.texturePath, self.baseColor, "4", self.damageAbsorption
+			, self.drops
 			)
 		)
 
 		# Don't allow floats
 		self.assertRaises(TypeError, BlockType,
-			( self.identifier, self.name, self.modelPath, self.texturePath
-			, self.baseColor, 4.3, self.damageAbsorption, self.drops
+			( self.identifier, self.blockClass, self.name, self.modelPath
+			, self.texturePath, self.baseColor, 4.3, self.damageAbsorption
+			, self.drops
 			)
 		)
 
@@ -84,15 +87,16 @@ class BlockTypeTest( TestCase ):
 
 		# test that strings are not accepted (when config files are parsed weirdly.
 		self.assertRaises(TypeError, BlockType,
-			( self.identifier, self.name, self.modelPath, self.texturePath
-			, self.baseColor, self.damageLimit, "8", self.drops
+			( self.identifier, self.blockClass, self.name, self.modelPath
+			, self.texturePath, self.baseColor, self.damageLimit, "8"
+			, self.drops
 			)
 		)
 
 		# Don't allow floats
 		self.assertRaises(TypeError, BlockType,
-			( self.identifier, self.name, self.modelPath, self.texturePath
-			, self.baseColor, self.damageLimit, 2.9, self.drops
+			( self.identifier, self.blockClass, self.name, self.modelPath
+			, self.texturePath, self.baseColor, self.damageLimit, 2.9, self.drops
 			)
 		)
 

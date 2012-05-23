@@ -1,6 +1,6 @@
 """ """
 
-from lib.block import Block
+from lib.baseBlock import BaseBlock
 from lib.player import Player
 from lib.blockType import BlockType
 from factories.player import PlayerSetup
@@ -16,8 +16,8 @@ class Initializing( TestCase ):
 		blockType, position, owner, damage, seed, baseColor = BlockSetup.prepare()
 
 		self.assertIsInstance(
-				Block( blockType, position, owner, damage, seed, baseColor )
-				, Block
+				BaseBlock( blockType, position, owner, damage, seed )
+				, BaseBlock
 				)
 		return None
 
