@@ -83,29 +83,29 @@ class FilePositions( Generating ):
 		# first block in the file, so at position 0
 		self.assertEqual( self.chunk.getIdx( pos ), 0 )
 
-		pos = Vec3( 0, 0, 1 )
-		# second block in the file, so skip blockSize positions (start counting from 0)
-		self.assertEqual( self.chunk.getIdx( pos ), blockSize - 1 )
-
-		pos = Vec3( 0, 0, 2 )
-		# skip two blockSize positions
-		self.assertEqual( self.chunk.getIdx( pos ), 2 * blockSize - 1 )
-
-		pos = Vec3( 0, 1, 0 )
-		# for every z index there is a block before this one. So chunkSize amount of
-		# blocks.
-		self.assertEqual( self.chunk.getIdx( pos ), blockSize * chunkSize - 1)
-
-		pos = Vec3( 0, 2, 0 )
-		self.assertEqual( self.chunk.getIdx( pos ), 2 * blockSize * chunkSize - 1 )
-
 		pos = Vec3( 1, 0, 0 )
-		# for every y, z combination there is a block before this one. So chunkSize ** 2
-		# amount of blocks.
-		self.assertEqual( self.chunk.getIdx( pos ), blockSize * chunkSize ** 2 -1 )
+		# second block in the file, so skip blockSize positions (start counting from 0)
+		self.assertEqual( self.chunk.getIdx( pos ), blockSize)
 
 		pos = Vec3( 2, 0, 0 )
-		self.assertEqual( self.chunk.getIdx( pos ), 2 * blockSize * chunkSize ** 2 -1 )
+		# skip two blockSize positions
+		self.assertEqual( self.chunk.getIdx( pos ), 2 * blockSize )
+
+		pos = Vec3( 0, 1, 0 )
+		# for every x index there is a block before this one. So chunkSize amount of
+		# blocks.
+		self.assertEqual( self.chunk.getIdx( pos ), blockSize * chunkSize )
+
+		pos = Vec3( 0, 2, 0 )
+		self.assertEqual( self.chunk.getIdx( pos ), 2 * blockSize * chunkSize )
+
+		pos = Vec3( 0, 0, 1 )
+		# for every x, y combination there is a block before this one. So chunkSize ** 2
+		# amount of blocks.
+		self.assertEqual( self.chunk.getIdx( pos ), blockSize * chunkSize ** 2 )
+
+		pos = Vec3( 0, 0, 2 )
+		self.assertEqual( self.chunk.getIdx( pos ), 2 * blockSize * chunkSize ** 2 )
 
 		return None
 

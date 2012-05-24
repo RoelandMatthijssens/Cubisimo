@@ -1,8 +1,9 @@
 """ """
 
+from blockInterface import BlockIF
+
 from panda3d.core import Filename
 from pandac.PandaModules import Vec3
-from blockInterface import BlockIF
 
 class BlockType( object ):
 	"""Basically just a container to keep all information relevant to all blocks with this
@@ -40,18 +41,28 @@ class BlockType( object ):
 
 	def loadModel(self, loader):
 		""" """
+
+		red = self.baseColor[0] / 255.0
+		green = self.baseColor[1] / 255.0
+		blue = self.baseColor[2] / 255.0
+
 		self.cube = loader.loadModel( self.modelPath )
 		self.cube.setPos( 0, 0, 0 )
-		self.cube.setColor( * self.baseColor )
+		self.cube.setColor( red, green, blue )
+
 		return None
 
 	def newSeed(self): return 0
 
-	def newBlock(self, owner):
+	def newBlock(self, owner, position=None, damage=None, seed=None):
 		""" """
-		position = Vec3(0, 0, 0)
-		block = self.blockClass(blockType=self, position=position, damage=0
-				, owner=owner, seed=self.newSeed()
+
+		position = position or Vec3(0, 0, 0)
+		damage = damage or 0
+		seed = seed or self.newSeed()
+
+		block = self.blockClass(blockType=self, position=position, damage=damage
+				, owner=owner, seed=seed
 				)
 		return block
 

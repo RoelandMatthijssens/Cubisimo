@@ -1,7 +1,7 @@
 """ """
 
 from lib.encoder import Encoder
-from lib.block import Block
+from lib.blockInterface import BlockIF
 from factories.blockTypeFactory import BlockTypeFactorySetup
 from factories.playerFactory import PlayerFactorySetup
 from factories.config import ConfigSetup
@@ -66,7 +66,7 @@ class EncoderTest( TestCase ):
 	def decoding(self):
 		""" """
 		pos = Vec3( 0, 0, 0 )
-		self.assertIsInstance( self.encoder.decodeBlock( "\x01\x01\x00n", pos ), Block )
+		self.assertIsInstance( self.encoder.decodeBlock( "\x01\x01\x00n", pos ), BlockIF )
 		self.assertEqual( self.encoder.decodeBlock( "\x01\x01\x00n", pos ).blockType
 				, self.blockTypeFactory.fromName( 'dirt' )
 				)

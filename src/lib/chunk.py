@@ -83,16 +83,17 @@ class Chunk( object ):
 		self.fileObj.seek( 0 )
 
 		while True:
+
 			part = self.fileObj.read( self.encoder.size() )
 			block = self.encoder.decodeBlock( part, pos )
 
 			block.create( self.chunkModel )
 			self.blocks.append( block )
 
-			if pos.getX() >= self.chunkSize - 1: pos = Vec3( 0, pos.getY() + 1, pos.getZ() )
+			if pos.getX() >= self.chunkSize -1: pos = Vec3( 0, pos.getY() + 1, pos.getZ() )
 			else: pos = pos + (1, 0, 0)
-			if pos.getY() >= self.chunkSize - 1: pos = Vec3( pos.getX(), 0, pos.getZ() + 1 )
-			if pos.getZ() >= self.chunkSize - 1: break
+			if pos.getY() >= self.chunkSize : pos = Vec3( pos.getX(), 0, pos.getZ() + 1 )
+			if pos.getZ() >= self.chunkSize : break
 
 		self.fileObj.close()
 		self.chunkModel.reparentTo( environment )
@@ -120,11 +121,10 @@ class Chunk( object ):
 
 	def getIdx(self, position):
 		''' '''
-		i = position.getZ()
+		i = position.getX()
 		i += position.getY() * self.chunkSize
-		i += position.getX() * self.chunkSize ** 2
+		i += position.getZ() * self.chunkSize ** 2
 		i = i * self.encoder.size()
-		if i > 0: i -= 1
 		return int( i )
 
 	def __iter__(self): return self.blocks

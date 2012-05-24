@@ -5,6 +5,7 @@ from blockType import BlockType
 from player import Player
 
 from pandac.PandaModules import Vec3
+from pandac.PandaModules import NodePath
 
 class BaseBlock( BlockIF ):
 	''' '''

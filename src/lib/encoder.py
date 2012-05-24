@@ -1,6 +1,5 @@
 """ """
 
-from block import Block
 import struct
 
 class Encoder( object ):
@@ -59,7 +58,8 @@ class Encoder( object ):
 		blockType = self.blockTypeFactory.fromId( blockTypeId )
 		player = self.playerFactory.fromId( playerId )
 
-		return Block( blockType, position, player, damage, seed, blockType.baseColor )
+		# return Block( blockType, position, player, damage, seed, blockType.baseColor )
+		return blockType.newBlock( owner=player, position=position, damage=damage, seed=seed  )
 
 	def intToByteList(self, integer ):
 		""" """
