@@ -3,8 +3,10 @@
 from direct.showbase.ShowBase import ShowBase
 from direct.actor.Actor import Actor
 from direct.task import Task
+
 from panda3d.core import WindowProperties
 from panda3d.core import Filename
+from pandac.PandaModules import Vec3
 
 class Scene(ShowBase):
 	""" """
@@ -65,11 +67,32 @@ class Scene(ShowBase):
 		cubyFile = Filename( "models/cube" )
 
 		self.cuby = self.loader.loadModel( cubyFile )
-		self.cuby.setPos( 5, 0, 0 )
-		self.cuby.setColor(255, 0, 0)
+		self.cuby.setPos( 50, 0, 0 )
+		self.cuby.setColor(0, 0, 0, 0)
 		self.cuby.reparentTo(self.render)
 
+		num = 10
+
+		for i in range( num ):
+			for j in range( num ):
+				for k in range( num ):
+					pos = Vec3( 50+2*k, j*2, i*2 )
+					speeder = self.loadSpeeder( pos )
+					speeder.reparentTo( self.render )
+
 		return None
+
+	def loadSpeeder(self, position):
+		''' '''
+
+		# speederFile = Filename( "models/speeder3" )
+		speederFile = Filename( "models/sphere" )
+
+		speeder = self.loader.loadModel( speederFile )
+		speeder.setPos( position.getX(), position.getY(), position.getZ() )
+		speeder.setColor( 0.15, 0.15, 0.15 )
+
+		return speeder
 
 	def hideMouse(self):
 		"""Hide the mouse pointer, we will add a crosshairs later."""
